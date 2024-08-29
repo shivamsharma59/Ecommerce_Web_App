@@ -1,0 +1,168 @@
+*,
+*::after,
+*::before {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+:root {
+    font-size: 62.5%;
+    font-family: "Montserrat", "Open Sans", sans-serif, Arial, Helvetica;
+}
+
+:root.light-theme,
+[data-theme="light"] {
+    --primary-color: #2843db;
+    --secondary-color: #8b9af4;
+    --accent-color: #4964f8;
+    --text-color: #04050b;
+    --background-color: #eff1fb;
+}
+
+:root.dark-theme,
+[data-theme="dark"] {
+    --primary-color: #243fd6;
+    --secondary-color: #0b1b75;
+    --accent-color: #0721b6;
+    --text-color: #f4f5fb;
+    --background-color: #040610;
+}
+
+/* body styling  */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    text-decoration: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- utility styles --- */
+h1 {
+    font-weight: 500;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 400;
+}
+
+/* image styling */
+img {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    object-fit: cover;
+}
+
+.container {
+    width: 80vw;
+    margin: 2rem auto;
+}
+
+.btn {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    font-weight: 600;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--accent-color);
+    cursor: pointer;
+}
+
+.input {
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.input:hover {
+    cursor: pointer;
+}
+
+.input:focus {
+    outline: 1px solid var(--text-color);
+}
+
+
+.flex {
+    display: flex;
+    gap: 2rem;
+}
+
+
+#registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 60vh;
+    width: 30vw;
+    border-radius: 5px;
+    padding: 1rem;
+    background-color: var(--background-color);
+    border: 2px solid var(--accent-color);
+}
+
+
+#registration-form-title {
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.form-input {
+    padding: 1rem;
+}
+
+#registration-form-submit-btn {
+    width: 40%;
+    margin: 0px auto;
+    background-color: var(--secondary-color);
+}
+
+#registration-form-submit-btn:hover {
+    background-color: var(--accent-color);
+}
+
+
+#signup-confirmation-text,
+#signup-link {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+
+#signup-link {
+    border: none;
+    background: none;
+    outline: none;
+    color: royalblue;
+    text-decoration: underline;
+}
+
+#signup-link:hover {
+    cursor: pointer;
+}
+
+#registartion-alternative{
+    display : flex;
+    justify-content: center;
+}

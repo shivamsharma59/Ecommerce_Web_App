@@ -1,0 +1,35 @@
+<%- include('./partials/header') %>
+
+    <main>
+        <section id="product-container">
+            <% if (cart && cart.products.length> 0) { %>
+
+                <% cart.products.forEach(item=>{ %>
+                    <% const product=item.productId; %>
+                        <div class="product-card">
+                            <div class="product-image-container">
+                                <img class="product-image" src="<%= product.imageUrl %>"
+                                    alt="<%= product.productName %>" style="width: 100px; height: auto;">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">
+                                    <%= product.productName %>
+                                </h3>
+                                <h3 class="product-price">$<%= product.price.toFixed(2) %>
+                                </h3>
+                                <p>Quantity: <%= product.quantity %>
+                                </p>
+                                <p>Total: $<%= (product.price * product.quantity).toFixed(2) %>
+                                </p>
+                                <h3>Total Amount: $<%= totalAmount.toFixed(2) %>
+                                </h3>
+                                <a href="/checkout">Proceed to Checkout</a>
+                            </div>
+                        </div>
+                        <% }); %>
+                            <% } else { %>
+                                <p>Your cart is empty.</p>
+                                <% } %>
+        </section>
+    </main>
+    <%- include('./partials/footer') %>

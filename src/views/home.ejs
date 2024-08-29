@@ -1,0 +1,116 @@
+<%- include('./partials/header') %>
+    <main>
+        <section id="product-container">
+            <% products.forEach(product=> { %>
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img class="product-image" src="<%= product.imageUrl %>" alt="image">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">
+                            <%= product.productName %>
+                        </h3>
+                        <h3 class="product-price">$<%= product.price %>
+                        </h3>
+                        <button id="<%= product._id %>" type="button" class="btn add-cart-btn">Add To
+                            Cart</button>
+                    </div>
+                </div>
+                <% }) %>
+        </section>
+        <button id="load-more-btn" class="btn">Load More</button>
+        <button id="show-less-btn" class="btn" style="display: none;">Show Less</button>
+    </main>
+    <%- include('./partials/footer') %>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                let currentPage = 1;
+                const limit = 5; // Define the limit
+                const productContainer = document.getElementById('product-container');
+                const loadMoreBtn = document.getElementById('load-more-btn');
+                const showLessBtn = document.getElementById('show-less-btn');
+                let totalProducts = []; // Array to keep track of all fetched products
+
+                function fetchProducts(page) {
+                    return fetch(`/?page=${page}&limit=${limit}`)
+                        .then(response => response.json());
+                }
+
+                function handleLoadMore() {
+                    currentPage++;
+                    fetchProducts(currentPage)
+                        .then(data => {
+                            totalProducts = totalProducts.concat(data); // Add new products to the total list
+                            if (data.length < limit) {
+                                showLessBtn.style.display = 'block';
+                                loadMoreBtn.style.display = 'none';
+                            }
+                            data.forEach(product => {
+                                const productCard = document.createElement('div');
+                                productCard.classList.add('product-card');
+                                productCard.innerHTML = `
+                                <div class="product-image-container">
+                                    <img class="product-image" src="${product.imageUrl}" alt="image">
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">${product.productName}</h3>
+                                    <h3 class="product-price">$${product.price}</h3>
+                                    <button id="${product.productId}" type="button" class="btn add-cart-btn">Add To Cart</button>
+                                </div>
+                            `;
+                                productContainer.appendChild(productCard);
+                            });
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+
+                function handleShowLess() {
+                    if (currentPage > 1) {
+                        const productsToRemove = totalProducts.slice((currentPage - 1) * limit - limit, (currentPage - 1) * limit);
+                        const productCards = Array.from(productContainer.getElementsByClassName('product-card'));
+                        const productCardsToRemove = productCards.slice(-productsToRemove.length);
+                        productCardsToRemove.forEach(card => card.remove());
+                        currentPage--;
+                        totalProducts = totalProducts.slice(0, currentPage * limit); // Adjust totalProducts
+
+                        if (currentPage === 1) {
+                            loadMoreBtn.style.display = 'block';
+                            showLessBtn.style.display = 'none';
+                        }
+                    }
+                }
+
+                function handleAddToCart(event) {
+                    const button = event.target;
+                    const productId = button.getAttribute('id');
+                    const quantity = 1; // Default quantity
+
+                    fetch('/auth/cart/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ productId, quantity })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Product added to cart!');
+                            } else {
+                                alert('Failed to add product to cart.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+
+                // Attach event listeners to Add to Cart buttons
+                const addToCartButtons = document.querySelectorAll('.add-cart-btn');
+                addToCartButtons.forEach(button => {
+                    button.addEventListener('click', handleAddToCart);
+                });
+
+                loadMoreBtn.addEventListener('click', handleLoadMore);
+                showLessBtn.addEventListener('click', handleShowLess);
+            });
+        </script>

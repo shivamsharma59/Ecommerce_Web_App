@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- style sheet -->
+    <link rel="stylesheet" href="/styles/login.css">
+    <!-- remixicon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <title>Login</title>
+</head>
+
+<body data-theme="light">
+    <form id="registration-form">
+        <h2 id="registration-form-title">Login</h2>
+        <input type="text" id="username" name="username" class="form-input" placeholder="Enter User name"
+            autocomplete="on" required>
+        <br>
+        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" autocomplete="on"
+            required>
+        <br>
+        <input type="password" id="password" name="password" class="form-input" placeholder="Create password"
+            autocomplete="on" required>
+        <br>
+        <button type="button" class="btn" id="registration-form-submit-btn">Login</button>
+        <div id="registration-alternative">
+            <label id="signup-confirmation-text">Don't have Account?</label>
+            <a href="signUp" id="signup-link">Sign-Up</a>
+        </div>
+    </form>
+
+    <script>
+        const url = 'http://localhost:3000';
+        document.getElementById('registration-form-submit-btn').addEventListener('click', async function () {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Check if any field is empty
+            if (!username || !email || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${url}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                    }),
+                });
+
+                if (response.ok) {
+                    // Handle success
+                    console.log('Login successful');
+                    window.location.href = '/';
+                } else {
+                    // Handle error
+                    const error = await response.text();
+                    console.error('Login failed:', error);
+                    // Display an error message to the user
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                // Display a network error message to the user
+            }
+        });
+    </script>
+</body>
+
+</html>

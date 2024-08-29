@@ -1,0 +1,115 @@
+
+header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px; /* Increased padding for a more spacious look */
+}
+
+#logo {
+    font-size: 1.8em; /* Larger font size for the logo */
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+.nav-items-container {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-items {
+    margin-left: 30px; /* Increased margin for better spacing */
+}
+
+.nav-links {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600; /* Slightly bolder font weight */
+    font-size: 1.2em; /* Increased font size */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Added text-shadow transition */
+}
+
+.nav-links:hover,
+.nav-links:focus {
+    color: #007bff;
+    text-shadow: 0 1px 4px rgba(0, 123, 255, 0.3); /* Added text-shadow for hover effect */
+}
+
+#nav-profile-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+#profile-icon,
+#logout-icon {
+    font-size: 1.5em; /* Larger icon size */
+    margin-right: 10px; /* Increased margin for better spacing */
+}
+
+#logout-btn {
+    color: #333;
+    text-decoration: none;
+    font-weight: 600; /* Slightly bolder font weight */
+    font-size: 1.2em; /* Increased font size */
+}
+
+#logout-btn:hover {
+    color: #e74c3c;
+}
+
+#cart-icon i {
+    font-size: 1.6em; /* Slightly larger cart icon */
+}
+
+#signup-login-btn {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600; /* Slightly bolder font weight */
+    font-size: 1.2em; /* Increased font size */
+}
+
+#signup-login-btn:hover {
+    color: #0056b3;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 30px; /* Reduced padding for smaller screens */
+    }
+
+    .nav-items-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-items {
+        margin-left: 0;
+        margin-bottom: 15px; /* Increased bottom margin for spacing */
+    }
+
+    #nav-profile-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .profile {
+        margin-bottom: 15px; /* Increased bottom margin for spacing */
+    }
+}

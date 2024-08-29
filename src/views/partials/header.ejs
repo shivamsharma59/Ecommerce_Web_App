@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- style sheet -->
+    <link rel="stylesheet" href="/styles/style.css">
+    <!-- navbar css -->
+    <link rel="stylesheet" href="/styles/navbar.css">
+    <!-- product css -->
+    <link rel="stylesheet" href="/styles/product.css">
+    <!-- remixicon  -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <title>Ecommerce</title>
+</head>
+
+<body data-theme="light">
+    <header>
+        <nav id="navbar" class="container">
+            <h3 id="logo">Estore</h3>
+            <ul class="nav-items-container">
+                <li class="nav-items"><a href="/" class="nav-links">Home</a></li>
+                <li class="nav-items"><a href="/" class="nav-links">About</a></li>
+                <li class="nav-items"><a href="/" class="nav-links">Contact Us</a></li>
+            </ul>
+
+            <ul id="nav-profile-container" class="nav-items-container">
+                <li class="nav-items">
+                    <a href="/auth/cart" id="cart-icon"><i class="ri-shopping-cart-2-line"></i></a>
+                </li>
+                <% if(session.isLoggedIn) { %>
+                    <li class="nav-items profile">
+                        <i class="ri-user-fill" id="profile-icon"></i>
+                        <a href="/" class="nav-links">
+                            <%= session.username %>
+                        </a>
+                    </li>
+                    <li class="nav-items profile">
+                        <a href="logout" id="logout-btn" class="nav-links"><i class="ri-logout-circle-r-line"
+                                id="logout-icon"></i></a>
+                    </li>
+                    <% } else { %>
+                        <li class="nav-items profile">
+                            <a href="signup" id="signup-login-btn">Login/SignUp</a>
+                        </li>
+                        <% } %>
+            </ul>
+        </nav>
+    </header>
