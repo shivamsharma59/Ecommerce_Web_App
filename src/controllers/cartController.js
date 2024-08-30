@@ -16,7 +16,6 @@ async function addToCart(req, res) {
 
         // Check if the product is already in the cart
         const productIndex = cart.products.findIndex(p => p.productId == productId);
-        console.log("hi");
         if (productIndex > -1) {
             console.log("Product already exists!");
             // Update the quantity if the product is already in the cart
@@ -34,14 +33,54 @@ async function addToCart(req, res) {
     }
 }
 
-async function deleteFromCart(req, res) {
-    // Implementation for removing items from the cart
+async function updateQuantity(req, res) {
+    try {
+        const userId = req.user.id; // Make sure user is authenticated
+        const { productId, quantity } = req.body;
+
+        const cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ success: false, message: 'Cart not found' });
+        }
+
+        const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
+        if (productIndex > -1) {
+            cart.products[productIndex].quantity = quantity;
+            await cart.save();
+            return res.json({ success: true });
+        } else {
+            return res.status(404).json({ success: false, message: 'Product not found in cart' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 }
 
+async function deleteFromCart(req, res) {
+    try {
+        const userId = req.user.id; // Make sure user is authenticated
+        const { productId } = req.body;
+
+        const cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ success: false, message: 'Cart not found' });
+        }
+
+        cart.products = cart.products.filter(p => p.productId.toString() !== productId);
+        await cart.save();
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
 async function getCart(req, res) {
     try {
         const userId = req.user.id; // Make sure user is authenticated
-        console.log(userId);
         const cart = await Cart.findOne({ userId }).populate('products.productId');
        
         if (!cart) {
@@ -62,6 +101,7 @@ async function getCart(req, res) {
 
 module.exports = {
     addToCart,
+    updateQuantity,
     deleteFromCart,
     getCart
 };

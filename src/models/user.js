@@ -17,12 +17,13 @@ const userSchema = new mongoose.Schema({
         validate: [validateEmail, 'Please fill a valid email address'],
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    isVerified : {type : Boolean, default : false},
-    emailToken : {type : String},
-    cart : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Cart'
-    }
+    isVerified: { type: Boolean, default: false },
+    emailToken: { type: String },
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart'
+    },
+    isAdmin : {type : Boolean, default : false}
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

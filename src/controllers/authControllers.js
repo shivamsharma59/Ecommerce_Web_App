@@ -88,6 +88,7 @@ async function loginUser(req, res) {
 
         req.session.username = user.username;
         req.session.isLoggedIn = true;
+        req.session.isAdmin = user.isAdmin;
 
         // Send the token in the response
         res.status(200).json({ msg: 'Login successful', token, username: user.username });
@@ -112,4 +113,3 @@ async function logoutUser(req, res) {
 
 
 module.exports = { verifyEmail, initiateSignup, loginUser, logoutUser };
-
