@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const productController = require('../controllers/productController.js');
 const homeController = require('../controllers/homeController.js');
 const authController = require('../controllers/authControllers.js');
 
@@ -17,8 +16,6 @@ router.get('/verifyEmail', authController.verifyEmail);
 router.post('/login', authController.loginUser);
 
 router.get('/logout', authController.logoutUser);
-
-router.get('/products',productController.addProduct);
 
 // Routes
 const authenticateUser = require('../middleware/auth.js');

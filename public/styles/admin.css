@@ -1,0 +1,141 @@
+/* Resetting some additional elements */
+body, h1, h2, h3, h4, h5, h6, ul, form, button {
+    margin: 0;
+    padding: 0;
+}
+
+/* General Styles */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: "Montserrat", "Open Sans", sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+h3, h4, h5, h6 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Container Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+main {
+    padding: 2rem;
+}
+
+/* Form Styles */
+form {
+    background-color: var(--background-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+form input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+button[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--accent-color);
+}
+
+/* Product List Styles */
+#product-list-container {
+    list-style: none;
+    padding: 0;
+}
+
+#product-list-container li {
+    background-color: var(--background-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#product-list-container img {
+    border-radius: 5px;
+    margin-right: 1rem;
+}
+
+#product-list-container span {
+    flex: 1;
+}
+
+.delete-btn {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: var(--accent-color);
+}
+
+/* Flex Utility */
+.flex {
+    display: flex;
+    gap: 2rem;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        width: 90vw;
+    }
+
+    .flex {
+        flex-direction: column;
+    }
+}

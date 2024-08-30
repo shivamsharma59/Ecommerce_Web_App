@@ -1,8 +1,17 @@
 function updateQuantity(productId, change) {
     const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
-    let currentQuantity = parseInt(quantityInput.value, 10);
-    currentQuantity += change;
+    if (!quantityInput) {
+        console.error('Quantity input not found');
+        return;
+    }
 
+    let currentQuantity = parseInt(quantityInput.value, 10);
+    if (isNaN(currentQuantity)) {
+        console.error('Current quantity is not a number');
+        return;
+    }
+
+    currentQuantity += change;
     if (currentQuantity < 1) currentQuantity = 1;
 
     quantityInput.value = currentQuantity;
@@ -19,16 +28,41 @@ function updateQuantity(productId, change) {
     .then(data => {
         if (data.success) {
             // Optionally, update the total price here
-            const itemTotal = document.querySelector(`.cart-item[data-product-id="${productId}"] .cart-item-total`);
-            const price = parseFloat(itemTotal.previousElementSibling.textContent.replace('$', ''));
+            const cartItem = document.querySelector(`.cart-item[data-product-id="${productId}"]`);
+            if (!cartItem) {
+                console.error('Cart item not found');
+                return;
+            }
+
+            const itemTotal = cartItem.querySelector('.cart-item-total');
+            const priceElement = cartItem.querySelector('.cart-item-price');
+            if (!itemTotal || !priceElement) {
+                console.error('Item total or price element not found');
+                return;
+            }
+
+            // Extract and clean the price
+            const priceText = priceElement.textContent.trim().replace('$', '');
+            const price = parseFloat(priceText);
+            if (isNaN(price)) {
+                console.error('Price is not a number');
+                return;
+            }
+
+            // Update the item total
             itemTotal.textContent = `Total: $${(price * currentQuantity).toFixed(2)}`;
+            
             // Update bottom cart total
             updateCartTotal();
         } else {
             alert('Failed to update quantity');
         }
+    })
+    .catch(error => {
+        console.error('Error updating quantity:', error);
     });
 }
+
 
 function deleteItem(productId) {
     // Make an AJAX request to remove the item from the cart

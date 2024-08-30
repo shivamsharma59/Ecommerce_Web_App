@@ -11,8 +11,10 @@
     <!-- product css -->
     <link rel="stylesheet" href="/styles/product.css">
     <!-- cart css -->
-     <link rel="stylesheet" href="/styles/cart.css">
-    <!-- remixicon  -->
+    <link rel="stylesheet" href="/styles/cart.css">
+    <!-- admin css -->
+    <link rel="stylesheet" href="/styles/admin.css">
+    <!-- remixicon -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +42,7 @@
                 <% if(session.isLoggedIn) { %>
                     <li class="nav-items profile">
                         <i class="ri-user-fill" id="profile-icon"></i>
-                        <a href="/" class="nav-links">
+                        <a href="/auth/admin" class="nav-links">
                             <%= session.username %>
                         </a>
                     </li>
@@ -48,11 +50,11 @@
                         <a href="logout" id="logout-btn" class="nav-links"><i class="ri-logout-circle-r-line"
                                 id="logout-icon"></i></a>
                     </li>
-                    <% } else { %>
-                        <li class="nav-items profile">
-                            <a href="signup" id="signup-login-btn">Login/SignUp</a>
-                        </li>
-                        <% } %>
+                <% } else { %>
+                    <li class="nav-items profile">
+                        <a href="signup" id="signup-login-btn">Login/SignUp</a>
+                    </li>
+                <% } %>
             </ul>
         </nav>
     </header>
