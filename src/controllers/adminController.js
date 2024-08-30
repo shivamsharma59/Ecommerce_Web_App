@@ -14,13 +14,14 @@ async function renderAdminPage(req, res){
 }
 
 async function addProduct(req, res) {
-    const { productName, price } = req.body;
+    const { productName, price ,stock} = req.body;
     const imageUrl = req.file ? `/images/${req.file.filename}` : null; // Correct filename usage
 
     try {
         const newProduct = new Product({
             productName,
             price,
+            stock: parseInt(stock, 10), // Ensure stock is parsed as integer
             imageUrl
         });
         await newProduct.save();

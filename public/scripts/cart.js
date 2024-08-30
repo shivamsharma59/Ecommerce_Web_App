@@ -55,14 +55,15 @@ function updateQuantity(productId, change) {
             // Update bottom cart total
             updateCartTotal();
         } else {
-            alert('Failed to update quantity');
+            alert(data.message || 'Failed to update quantity');
+            // Revert quantity input to the previous value if update fails
+            quantityInput.value = currentQuantity - change;
         }
     })
     .catch(error => {
         console.error('Error updating quantity:', error);
     });
 }
-
 
 function deleteItem(productId) {
     // Make an AJAX request to remove the item from the cart
@@ -83,6 +84,9 @@ function deleteItem(productId) {
         } else {
             alert('Failed to remove item');
         }
+    })
+    .catch(error => {
+        console.error('Error removing item:', error);
     });
 }
 

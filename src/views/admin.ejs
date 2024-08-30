@@ -15,6 +15,9 @@
             <label for="imageUrl">Image:</label>
             <input type="file" id="imageUrl" name="imageUrl" accept="image/*" required>
 
+            <label for="stock">Stock Quantity:</label> <!-- New field for stock -->
+            <input type="number" id="stock" name="stock" min="0" required>
+
             <button type="submit">Add Product</button>
         </form>
     </section>
@@ -27,7 +30,7 @@
                 <li data-id="<%= product._id %>" class="">
                     <img src="<%= product.imageUrl %>" alt="<%= product.productName %>" width="100">
                     <span>
-                        <%= product.productName %> - $<%= product.price %>
+                        <%= product.productName %> - $<%= product.price %> - Stock: <%= product.stock %> <!-- Display stock -->
                     </span>
                     <button class="delete-btn" onclick="deleteProduct('<%= product._id %>')">Delete</button>
                 </li>
