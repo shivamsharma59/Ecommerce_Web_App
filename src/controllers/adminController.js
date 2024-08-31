@@ -1,9 +1,10 @@
 const Product = require('../models/product');
+const Cart = require('../models/cart'); // Import the Cart model
 const path = require('path');
 const fs = require('fs');
 
 // Render admin page with products
-async function renderAdminPage(req, res){
+async function renderAdminPage(req, res) {
     try {
         const products = await Product.find();
         res.render('admin', { session: req.session, products });
@@ -14,12 +15,13 @@ async function renderAdminPage(req, res){
 }
 
 async function addProduct(req, res) {
-    const { productName, price ,stock} = req.body;
+    const { productName, price, description, stock } = req.body;
     const imageUrl = req.file ? `/images/${req.file.filename}` : null; // Correct filename usage
 
     try {
         const newProduct = new Product({
             productName,
+            description, // Added description
             price,
             stock: parseInt(stock, 10), // Ensure stock is parsed as integer
             imageUrl
@@ -32,9 +34,8 @@ async function addProduct(req, res) {
     }
 }
 
-
-// Delete product
-async function deleteProduct(req, res){
+// Delete product and also remove it from all carts
+async function deleteProduct(req, res) {
     const productId = req.params.id;
 
     try {
@@ -45,6 +46,13 @@ async function deleteProduct(req, res){
                 fs.unlinkSync(imagePath);
             }
         }
+
+        // Remove product from all carts
+        await Cart.updateMany(
+            { 'products.productId': productId },
+            { $pull: { products: { productId: productId } } }
+        );
+
         await Product.findByIdAndDelete(productId);
         res.status(200).json({ success: true });
     } catch (error) {
@@ -55,6 +63,6 @@ async function deleteProduct(req, res){
 
 module.exports = {
     renderAdminPage,
-    addProduct, // Use multer middleware
+    addProduct,
     deleteProduct
 };
