@@ -4,15 +4,14 @@ async function getHomePage(req, res) {
     try {
         let products = await Product.find(); // Fetch all products
 
-        if (req.xhr) {
+        if (req.xhr) { // specifying if it is ajax request
             // Respond with JSON data for AJAX requests
             return res.json(products);
         }
-
         // Render the home page with all products
-        res.render('home', { session: req.session, products: products });
+        return res.render('home', { session: req.session, products: products });
     } catch (error) {
-        res.status(500).json({ error: "An error occurred while fetching products" });
+        return res.status(500).json({ error: "An error occurred while fetching products" });
     }
 }
 

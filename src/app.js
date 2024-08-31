@@ -8,12 +8,12 @@ require('dotenv').config();
 const app = express();
 
 // middleware
-app.use(cors({ origin: `${process.env.CORS_ORIGIN}${process.env.PORT}` }));
+// app.use(cors({ origin: `${process.env.CORS_ORIGIN}${process.env.PORT}` }));
 app.use(cors({
     origin : '*',
     methods : ['POST', 'PUT', 'PATCH', 'DELETE', 'UPDATE', 'GET']
 }));
-app.use(express.json({ limit: "20kb" }));
+app.use(express.json({ limit: "20kb" })); // specifies the maximum size of JSON payload that the server will accept
 app.use(express.urlencoded({ extended: true, limit: "20kb" }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../public/images')));
@@ -24,7 +24,7 @@ app.use(session({
     saveUninitialized : false,
     name : 'sessionId',   // giving the custom name to prevent powered by attacks like we don't want attackers to know that what technology(express) we are using node as the default name is connect.sid
     cookie : {
-        secure : false, // // if true : only transmit cookie over https
+        secure : false, // if true : only transmit cookie over https
         httpOnly : true,
         maxAge : 1000 * 60 * 30 // 30 minutes
     }
