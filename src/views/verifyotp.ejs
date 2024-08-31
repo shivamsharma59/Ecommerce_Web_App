@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- style sheet -->
+    <link rel="stylesheet" href="/styles/verifyotp.css">
+    <title>Verify OTP</title>
+</head>
+<body data-theme="light">
+    <form id="verify-otp-form">
+        <h2 id="verify-otp-form-title">Verify OTP</h2>
+        <input type="text" id="otp" name="otp" class="form-input" placeholder="Enter OTP" autocomplete="on" required>
+        <br>
+        <button type="button" class="btn" id="verify-otp-form-submit-btn">Submit</button>
+        <div id="forgot-password-alternative">
+            <label id="forgot-password-confirmation-text">Didn't receive OTP?</label>
+            <a href="forgotpass" id="forgot-password-link">Request again</a>
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('verify-otp-form-submit-btn').addEventListener('click', async function (event) {
+            event.preventDefault();
+            const otp = document.getElementById('otp').value.trim();
+
+            if (!otp) {
+                alert('Please enter OTP.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ otp }),
+                });
+
+                if (response.ok) {
+                    window.location.href = '/create-new-pass'; // Redirect to create new password page
+                } else {
+                    const error = await response.text();
+                    alert('Error: ' + error);
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                alert('Network error.');
+            }
+        });
+    </script>
+</body>
+</html>

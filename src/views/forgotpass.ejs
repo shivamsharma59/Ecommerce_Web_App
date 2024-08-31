@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- style sheet -->
+    <link rel="stylesheet" href="/styles/forgotpass.css">
+    <title>Forgot Password</title>
+</head>
+<body data-theme="light">
+    <form id="forgot-password-form">
+        <h2 id="forgot-password-form-title">Forgot Password</h2>
+        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" autocomplete="on" required>
+        <br>
+        <button type="button" class="btn" id="forgot-password-form-submit-btn">Submit</button>
+        <div id="login-alternative">
+            <label id="login-confirmation-text">Remembered your password?</label>
+            <a href="login" id="login-link">Login</a>
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('forgot-password-form-submit-btn').addEventListener('click', async function (event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+
+            if (!email) {
+                alert('Please enter your email.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/forgot-pass', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+
+                if (response.ok) {
+                    window.location.href = '/verify-otp'; // Redirect to OTP verification page
+                } else {
+                    const error = await response.text();
+                    alert('Error: ' + error);
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                alert('Network error.');
+            }
+        });
+    </script>
+</body>
+</html>

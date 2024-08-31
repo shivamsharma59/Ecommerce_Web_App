@@ -31,7 +31,7 @@ async function initiateSignup(req, res) {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: 'User already exists Please login' });
 
-    await sendMail(email, emailToken);
+    await sendMail(email, emailToken, 'verification');
 
     try {
         const hashedPassword = bcrypt.hashSync(password, 10);
@@ -43,7 +43,6 @@ async function initiateSignup(req, res) {
         })
 
         newUser.save();
-        // return res.redirect('/login');
     }
     catch (error) {
         console.log(error);
@@ -91,10 +90,10 @@ async function loginUser(req, res) {
         req.session.isAdmin = user.isAdmin;
 
         // Send the token in the response
-        res.status(200).json({ msg: 'Login successful', token, username: user.username });
+        return res.status(200).json({ msg: 'Login successful', token, username: user.username });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ msg: 'Server error' });
+        return res.status(500).json({ msg: 'Server error' });
     }
 }
 
@@ -103,7 +102,7 @@ async function logoutUser(req, res) {
         if (err) {
             return res.status(500).send('Failed to logout');
         }
-        
+
         res.clearCookie('sessionId');
         // Clear the authentication token cookie if used
         res.clearCookie('token');
@@ -111,5 +110,58 @@ async function logoutUser(req, res) {
     });
 }
 
+// Generate and send OTP
+async function forgotPassword(req, res) {
+    const { email } = req.body;
+    req.session.email = email; // creating a temporary session for verification
+    const user = await User.findOne({ email });
 
-module.exports = { verifyEmail, initiateSignup, loginUser, logoutUser };
+    if (!user) return res.status(400).json({ msg: 'User not found' });
+
+    const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
+    const otpExpires = Date.now() + 5 * 60 * 1000; // OTP valid for 15 minutes
+
+    await User.updateOne({ email }, { otp, otpExpires }); // Store OTP and expiration
+
+    await sendMail(email, otp, 'otp'); // Send OTP to user's email
+    return res.status(200).json({ msg: 'OTP sent to your email' });
+}
+
+
+// Verify OTP
+async function verifyOtp(req, res) {
+    const { otp } = req.body;
+    const email = req.session.email;
+    const user = await User.findOne({ email, otp, otpExpires: { $gt: Date.now() } }); // Check OTP and expiration
+
+    if (!user) return res.status(400).json({ msg: 'Invalid or expired OTP' });
+
+    // Clear OTP after successful verification
+    await User.updateOne({ email }, { otp: null, otpExpires: null });
+    return res.status(200).json({ msg: 'OTP verified' });
+}
+
+
+
+// Create new password
+async function createNewPassword(req, res) {
+    const { newPassword } = req.body;
+    const email = req.session.email; // Store the email in session or pass it from the frontend
+
+    if (!email) return res.status(400).json({ msg: 'No email found' });
+
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    await User.updateOne({ email }, { password: hashedPassword, otp: null, otpExpires: null });
+
+    // clearing the temporary session 
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Failed to logout');
+        }
+        res.clearCookie('sessionId');
+        return res.status(200).json({ msg: 'Password updated successfully' });
+    });
+}
+
+
+module.exports = { verifyEmail, initiateSignup, loginUser, logoutUser, forgotPassword, verifyOtp, createNewPassword };

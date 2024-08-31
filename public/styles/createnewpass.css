@@ -1,8 +1,8 @@
 *,
 *::after,
 *::before {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -29,7 +29,7 @@
     --background-color: #040610;
 }
 
-/* body styling  */
+/* body styling */
 body {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -103,14 +103,12 @@ img {
     outline: 1px solid var(--text-color);
 }
 
-
 .flex {
     display: flex;
     gap: 2rem;
 }
 
-
-#registration-form {
+#create-new-password-form {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -122,8 +120,7 @@ img {
     border: 2px solid var(--accent-color);
 }
 
-
-#registration-form-title {
+#create-new-password-form-title {
     font-size: 2rem;
     font-weight: 500;
 }
@@ -132,52 +129,12 @@ img {
     padding: 1rem;
 }
 
-#registration-form-submit-btn {
+#create-new-password-form-submit-btn {
     width: 40%;
-    margin: 0px auto;
+    margin: 0 auto;
     background-color: var(--secondary-color);
 }
 
-#registration-form-submit-btn:hover {
+#create-new-password-form-submit-btn:hover {
     background-color: var(--accent-color);
-}
-
-#registration-alternative{
-    display : flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#signup-confirmation-text,
-#signup-link {
-    font-size: 1.2rem;
-    font-weight: 400;
-}
-
-
-#signup-link {
-    border: none;
-    background: none;
-    outline: none;
-    color: royalblue;
-    text-decoration: underline;
-}
-
-#signup-link:hover {
-    cursor: pointer;
-}
-
-
-#forgot-pass {
-    border: none;
-    background: none;
-    outline: none;
-    color: royalblue;
-    text-decoration: underline;
-    text-align: center;
-    font-size: 1.2rem;
-}
-
-#forgot-pass:hover {
-    cursor: pointer;
 }

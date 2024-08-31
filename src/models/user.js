@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 var validateEmail = function (email) {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return re.test(email)
+    return re.test(email);
 };
 
 const userSchema = new mongoose.Schema({
@@ -19,11 +19,13 @@ const userSchema = new mongoose.Schema({
     },
     isVerified: { type: Boolean, default: false },
     emailToken: { type: String },
+    otp: { type: String }, // Field for storing OTP
+    otpExpires: { type: Date }, // Field for storing OTP expiration
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cart'
     },
-    isAdmin : {type : Boolean, default : false}
+    isAdmin: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
