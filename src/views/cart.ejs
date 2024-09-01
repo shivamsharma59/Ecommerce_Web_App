@@ -1,3 +1,4 @@
+<!-- views/carts.ejs -->
 <%- include('./partials/header') %>
 
 <main>
@@ -33,7 +34,7 @@
     <% if (cart && cart.products.length > 0) { %>
         <nav id="bottom-cart-bar">
             <h3 id="bottom-cart-total">Total: $<%= totalAmount.toFixed(2) %></h3>
-            <a href="/checkout" id="bottom-checkout-btn">Proceed to Checkout</a>
+            <a href="/auth/checkout" id="bottom-checkout-btn">Proceed to Checkout</a>
         </nav>
     <% } %>
 </main>

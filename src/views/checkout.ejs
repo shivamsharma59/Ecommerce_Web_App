@@ -1,0 +1,56 @@
+<!-- views/checkout.ejs -->
+<%- include('./partials/header') %>
+
+<main>
+    <h1>Checkout</h1>
+
+    <!-- Display Cart Summary -->
+    <section id="cart-summary">
+        <h2>Your Cart</h2>
+        <ul id="checkout-cart-items">
+            <% cart.products.forEach(item => { %>
+                <li>
+                    <h3><%= item.productId.productName %> (x<%= item.quantity %>)</h3>
+                    <p>Price: $<%= item.productId.price.toFixed(2) %></p>
+                    <p>Total: $<%= (item.productId.price * item.quantity).toFixed(2) %></p>
+                </li>
+            <% }) %>
+            
+        </ul>
+        <h3>Total Amount: $<%= totalAmount.toFixed(2) %></h3>
+    </section>
+
+    <!-- Checkout Form -->
+    <form action="/auth/checkout" method="POST" id="checkout-form">
+        <div>
+            <h2>Shipping Address</h2>
+            <label for="street">Street:</label>
+            <input type="text" name="street" id="street" required>
+            
+            <label for="city">City:</label>
+            <input type="text" name="city" id="city" required>
+            
+            <label for="state">State:</label>
+            <input type="text" name="state" id="state" required>
+            
+            <label for="zipCode">ZIP Code:</label>
+            <input type="text" name="zipCode" id="zipCode" required>
+            
+            <label for="country">Country:</label>
+            <input type="text" name="country" id="country" required>
+        </div>
+        
+        <div>
+            <h2>Contact Details</h2>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" name="phone" id="phone" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        
+        <button type="submit" id="pay-now-btn">Pay Now</button>
+    </form>
+</main>
+
+<%- include('./partials/footer') %>
