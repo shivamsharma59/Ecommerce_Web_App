@@ -1,9 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const Product = require('../models/product.js');
 const homeController = require('../controllers/homeController.js');
 const authController = require('../controllers/authControllers.js');
 
-router.get('/', homeController.getHomePage);
+
+// ## always do res.render in the routes file never make a controler to handle that 
+router.get('/', async (req, res) => {
+    try {
+        let products = await Product.find(); // Fetch all products
+        
+        if (req.headers['x-requested-with'] === 'fetch') {
+            // Respond with JSON data for AJAX requests
+            return res.json(products);
+        }
+
+        // Render the home page with all products
+        return res.render('home', { session: req.session, products: products });
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while fetching products" });
+    }
+});
 
 router.get('/signup', (req, res) => { return res.render('signup'); });
 
