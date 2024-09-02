@@ -36,11 +36,12 @@ async function process(req, res) {
     try {
         const { street, city, state, zipCode, country, phone, email } = req.body;
         const userId = req.user.id;
+
+        // Find the user's cart
         let cart = await Cart.findOne({ userId }).populate({
             path: 'products.productId',
             select: 'productName price imageUrl', // Only select the fields you need
-        })
-            .exec();
+        }).exec();
 
         if (!cart || !cart.products || cart.products.length === 0) {
             return res.status(400).json({ success: false, message: 'Cart is empty' });
@@ -57,7 +58,7 @@ async function process(req, res) {
                 product.stock -= item.quantity;
                 await product.save();
             } else {
-                return res.status(400).json({ success: false, message: `Not enough stock for ${product.name}` });
+                return res.status(400).json({ success: false, message: `Not enough stock for ${product.productName}` });
             }
         }
 
@@ -72,6 +73,9 @@ async function process(req, res) {
         });
 
         await newOrder.save();
+
+        // Clear the user's cart
+        await Cart.deleteOne({ userId });
 
         res.status(200).json({ success: true, message: 'Order placed successfully!' });
     } catch (error) {
