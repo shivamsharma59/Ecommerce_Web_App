@@ -10,18 +10,57 @@
                     <h3 class="product-name">
                         <%= product.productName %>
                     </h3>
-                    <p class="product-description"><%= product.description %></p> <!-- Added description -->
+                    <p class="product-description"><%= product.description %></p>
                     <h3 class="product-price">$<%= product.price %></h3>
                     <button id="<%= product._id %>" type="button" class="btn add-cart-btn">Add To Cart</button>
                 </div>
             </div>
         <% }) %>
     </section>
+    <% if (hasMore) { %>
+        <button id="load-more-btn" type="button" class="btn">Load More</button>
+    <% } %>
 </main>
 <%- include('./partials/footer') %>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        let currentPage = 1;
+        const productsPerPage = 5;
+
+        function fetchProducts(page) {
+            fetch(`/load-products?page=${page}&limit=${productsPerPage}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const productContainer = document.getElementById('product-container');
+                data.products.forEach(product => {
+                    const productCard = `
+                        <div class="product-card">
+                            <div class="product-image-container">
+                                <img class="product-image" src="${product.imageUrl}" alt="image">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">${product.productName}</h3>
+                                <p class="product-description">${product.description}</p>
+                                <h3 class="product-price">$${product.price}</h3>
+                                <button id="${product._id}" type="button" class="btn add-cart-btn">Add To Cart</button>
+                            </div>
+                        </div>
+                    `;
+                    productContainer.insertAdjacentHTML('beforeend', productCard);
+                });
+
+                if (data.hasMore) {
+                    document.getElementById('load-more-btn').style.display = 'block';
+                } else {
+                    document.getElementById('load-more-btn').style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
         function handleAddToCart(event) {
             const button = event.target;
             const productId = button.getAttribute('id');
@@ -41,11 +80,15 @@
             .catch(error => console.error('Error:', error));
         }
 
-        // Attach event listeners to Add to Cart buttons
-        const addToCartButtons = document.querySelectorAll('.add-cart-btn');
-        addToCartButtons.forEach(button => {
+        // Load more products on button click
+        document.getElementById('load-more-btn').addEventListener('click', () => {
+            currentPage++;
+            fetchProducts(currentPage);
+        });
+
+        // Attach event listeners to existing Add to Cart buttons
+        document.querySelectorAll('.add-cart-btn').forEach(button => {
             button.addEventListener('click', handleAddToCart);
         });
     });
 </script>
-    
