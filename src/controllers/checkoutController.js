@@ -7,7 +7,7 @@ async function renderCheckoutPage(req, res) {
         const userId = req.user.id;
         let cart = await Cart.findOne({ userId }).populate({
             path: 'products.productId',
-            select: 'productName price', // Only select the fields you need
+            select: 'productName price imageUrl', // Only select the fields you need
         })
             .exec();
 
@@ -38,7 +38,7 @@ async function process(req, res) {
         const userId = req.user.id;
         let cart = await Cart.findOne({ userId }).populate({
             path: 'products.productId',
-            select: 'productName price', // Only select the fields you need
+            select: 'productName price imageUrl', // Only select the fields you need
         })
             .exec();
 
@@ -72,9 +72,6 @@ async function process(req, res) {
         });
 
         await newOrder.save();
-
-        // Clear the cart
-        req.session.cart = null;
 
         res.status(200).json({ success: true, message: 'Order placed successfully!' });
     } catch (error) {

@@ -10,6 +10,8 @@
         <ul id="checkout-cart-items">
             <% cart.products.forEach(item => { %>
                 <li>
+                    <% console.log(item.productId.imageUrl) %>
+                    <img class="cart-item-image" src="<%= item.productId.imageUrl %>" alt="<%= item.productId.productName %>">
                     <h3><%= item.productId.productName %> (x<%= item.quantity %>)</h3>
                     <p>Price: $<%= item.productId.price.toFixed(2) %></p>
                     <p>Total: $<%= (item.productId.price * item.quantity).toFixed(2) %></p>

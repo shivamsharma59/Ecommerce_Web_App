@@ -32,6 +32,7 @@ async function initiateSignup(req, res) {
     if (user) return res.status(400).json({ msg: 'User already exists Please login' });
 
     await sendMail(email, emailToken, 'verification');
+    console.log(user);
 
     try {
         const hashedPassword = bcrypt.hashSync(password, 10);
@@ -42,7 +43,7 @@ async function initiateSignup(req, res) {
             emailToken,
         })
 
-        newUser.save();
+        await newUser.save();
     }
     catch (error) {
         console.log(error);
