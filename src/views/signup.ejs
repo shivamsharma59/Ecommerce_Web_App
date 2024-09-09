@@ -18,13 +18,19 @@
 </head>
 
 <body data-theme="light">
+
+    <h2 id="signup-error" class="hidden">msg</h2>
+
     <form id="registration-form">
         <h2 id="registration-form-title">Sign-Up</h2>
-        <input type="text" id="username" name="username" class="form-input" placeholder="Enter User name" autocomplete="on" required>
+        <input type="text" id="username" name="username" class="form-input" placeholder="Enter User name"
+            autocomplete="on" required>
         <br>
-        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" autocomplete="on" required>
+        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" autocomplete="on"
+            required>
         <br>
-        <input type="password" id="password" name="password" class="form-input" placeholder="Create password" autocomplete="on" required>
+        <input type="password" id="password" name="password" class="form-input" placeholder="Create password"
+            autocomplete="on" required>
         <br>
         <button type="button" class="btn" id="registration-form-submit-btn">Sign-Up</button>
         <div id="registration-alternative">
@@ -35,8 +41,7 @@
 
     <script>
         const url = 'http://localhost:3000';
-        document.getElementById('registration-form-submit-btn').addEventListener('click', async function(event) {
-            console.log('Hi');      
+        document.getElementById('registration-form-submit-btn').addEventListener('click', async function (event) {
             event.preventDefault();
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
@@ -45,7 +50,7 @@
             // Check if any field is empty
             if (!username || !email || !password) {
                 alert('Please fill in all fields.');
-                return; 
+                return;
             }
 
 
@@ -62,11 +67,15 @@
                     }),
                 });
 
+                const data = await response.json();
+
                 if (response.ok) {
-                    // Handle success
-                    console.log('Sign-Up successful');
+                    console.log('Email sent');
                 } else {
                     // Handle error
+                    let popUp = document.getElementById('signup-error');
+                    popUp.innerText = data.msg;
+                    popUp.classList.remove('hidden');
                     const error = await response.text();
                     console.error('Sign-Up failed:', error);
                     // Display an error message to the user

@@ -37,10 +37,10 @@ async function addToCart(req, res) {
         }
 
         await cart.save();
-        res.status(201).json({ msg: 'Product added to cart successfully!' });
+        return res.status(201).json({ msg: 'Product added to cart successfully!' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
