@@ -19,7 +19,7 @@
 
 <body data-theme="light">
 
-    <h2 id="signup-error" class="hidden">msg</h2>
+    <h2 class="error-message hidden">msg</h2>
 
     <form id="registration-form">
         <h2 id="registration-form-title">Sign-Up</h2>
@@ -73,7 +73,8 @@
                     console.log('Email sent');
                 } else {
                     // Handle error
-                    let popUp = document.getElementById('signup-error');
+                    let popUp = document.querySelector('.error-message');
+                    console.log(popUp);
                     popUp.innerText = data.msg;
                     popUp.classList.remove('hidden');
                     const error = await response.text();

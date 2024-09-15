@@ -3,7 +3,7 @@ function isAdmin(req, res, next) {
     if (req.session.isLoggedIn && req.session.isAdmin) {
         next();
     } else {
-        res.status(403).send('Forbidden');
+        return res.render('authError', { status: 403, msg: 'You need an admin accout to access this page' });;
     }
 }
 

@@ -18,6 +18,8 @@
 </head>
 
 <body data-theme="light">
+    <h2 id="login-error" class="hidden">msg</h2>
+
     <form id="registration-form">
         <h2 id="registration-form-title">Login</h2>
         <input type="text" id="username" name="username" class="form-input" placeholder="Enter User name"
@@ -31,8 +33,8 @@
         <br>
         <button type="button" class="btn" id="registration-form-submit-btn">Login</button>
         <div id="registration-alternative">
-                <label id="signup-confirmation-text">Don't have Account?</label>
-                <a href="signUp" id="signup-link">Sign-Up</a>
+            <label id="signup-confirmation-text">Don't have Account?</label>
+            <a href="signUp" id="signup-link">Sign-Up</a>
         </div>
         <a href="forgotpass" id="forgot-pass">Forgot Password?</a>
     </form>
@@ -63,12 +65,17 @@
                     }),
                 });
 
+                const data = await response.json();
+
                 if (response.ok) {
                     // Handle success
                     console.log('Login successful');
                     window.location.href = '/';
                 } else {
                     // Handle error
+                    let popUp = document.getElementById('login-error');
+                    popUp.innerText = data.msg;
+                    popUp.classList.remove('hidden');
                     const error = await response.text();
                     console.error('Login failed:', error);
                     // Display an error message to the user

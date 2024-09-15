@@ -87,7 +87,7 @@ async function loginUser(req, res) {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
+            return res.status(400).json({ msg: 'User with this email not found' });
         }
 
         if (!bcrypt.compareSync(password, user.password)) {
@@ -121,6 +121,7 @@ async function logoutUser(req, res) {
         }
 
         res.clearCookie('token');
+        res.clearCookie('sessionId');
         res.redirect('/');
     });
 }
