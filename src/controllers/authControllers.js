@@ -1,11 +1,38 @@
-const User = require('../models/user.js');
+const User = require('../models/user');
+const VerificationToken = require('../models/verificationToken');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
-const sendMail = require('../services/sendMail.js');
+const sendMail = require('../services/sendMail');
 const jwt = require('jsonwebtoken');
 
+// Initiate signup by generating and sending a verification token
+async function initiateSignup(req, res) {
+    const { username, email, password } = req.body;
+    const emailToken = crypto.randomBytes(64).toString('hex');
 
-// This is your new route handler for email verification
+    // Check if a user with the given email or username already exists
+    let user = await User.findOne({ $or: [{ email }, { username }] });
+    if (user) return res.status(400).json({ msg: 'User with this username or email already exists!' });
+
+    // Save verification token to a temporary collection
+    await sendMail(email, emailToken, 'verification');
+
+    try {
+        await VerificationToken.create({
+            email,
+            username,
+            password: await bcrypt.hash(password, 10),
+            emailToken,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Server Error');
+    }
+
+    return res.status(200).json({ msg: 'Email Verification link sent' });
+}
+
+// Verify email and create user record
 async function verifyEmail(req, res) {
     const { emailToken } = req.query;
 
@@ -13,60 +40,46 @@ async function verifyEmail(req, res) {
         return res.status(400).json({ msg: 'Invalid token' });
     }
 
-    let user = await User.findOne({ emailToken });
-
-    if (!user) {
-        return res.status(400).json({ msg: 'User not found' });
+    // Retrieve the token record
+    const tokenRecord = await VerificationToken.findOne({ emailToken });
+    if (!tokenRecord) {
+        return res.status(400).json({ msg: 'Invalid or expired token' });
     }
 
-    await User.updateOne({ email: user.email }, { isVerified: true, emailToken: null });
-
-    return res.status(200).redirect('/login');
-};
-
-// Initiate signup by generating and sending an OTP
-async function initiateSignup(req, res) {
-    const { username, email, password } = req.body;
-    const emailToken = crypto.randomBytes(64).toString('hex');
-    // let user = await User.findOne({ email });
-    let user = await User.findOne({
-        $or : [{email}, {username}]
-    });
-    if (user) return res.status(400).json({ msg: 'User with this username or email already exists!' });
-
-    await sendMail(email, emailToken, 'verification');
-    console.log(user);
+    // Create a new user with the provided details
+    const { email, username, password } = tokenRecord;
 
     try {
-        const hashedPassword = await  bcrypt.hash(password, 10);
-        const newUser = await User.create({
+        const newUser = new User({
             username,
             email,
-            password: hashedPassword,
-            emailToken,
-        })
-
+            password,
+            isVerified: true
+        });
         await newUser.save();
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).send('Server Error');
-    }
 
-    return res.status(200).json({ msg: "Email Verification link sent" });
+        // Clean up the token record
+        await VerificationToken.deleteOne({ emailToken });
+
+        return res.status(200).redirect('/login');
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ msg: 'Server Error' });
+    }
 }
 
+// Generate JWT token
 const generateToken = (user) => {
-    // Create a token with user ID and other payload information
     return jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
-        expiresIn: '1h', // Token expiry time
+        expiresIn: '1h',
     });
 };
 
+// Login user
 async function loginUser(req, res) {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !email || !password) {
+    if (!email || !password) {
         return res.status(400).json({ msg: 'Please provide all required fields' });
     }
 
@@ -93,7 +106,6 @@ async function loginUser(req, res) {
         req.session.isLoggedIn = true;
         req.session.isAdmin = user.isAdmin;
 
-        // Send the token in the response
         return res.status(200).json({ msg: 'Login successful', token, username: user.username });
     } catch (error) {
         console.error(error);
@@ -101,71 +113,64 @@ async function loginUser(req, res) {
     }
 }
 
+// Logout user
 async function logoutUser(req, res) {
     req.session.destroy(err => {
         if (err) {
             return res.status(500).send('Failed to logout');
         }
 
-        res.clearCookie('sessionId');
-        // Clear the authentication token cookie if used
         res.clearCookie('token');
         res.redirect('/');
     });
 }
 
-// Generate and send OTP
+// Generate and send OTP for password reset
 async function forgotPassword(req, res) {
     const { email } = req.body;
-    req.session.email = email; // creating a temporary session for verification
-    const user = await User.findOne({ email });
+    req.session.email = email; // Store email in session
 
+    const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ msg: 'User not found' });
 
-    const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
-    const otpExpires = Date.now() + 5 * 60 * 1000; // OTP valid for 15 minutes
+    const otp = crypto.randomInt(100000, 999999).toString(); // Generate 6-digit OTP
+    const otpExpires = Date.now() + 15 * 60 * 1000; // OTP valid for 15 minutes
 
-    await User.updateOne({ email }, { otp, otpExpires }); // Store OTP and expiration
-
+    await User.updateOne({ email }, { otp, otpExpires });
     await sendMail(email, otp, 'otp'); // Send OTP to user's email
+
     return res.status(200).json({ msg: 'OTP sent to your email' });
 }
-
 
 // Verify OTP
 async function verifyOtp(req, res) {
     const { otp } = req.body;
     const email = req.session.email;
-    const user = await User.findOne({ email, otp, otpExpires: { $gt: Date.now() } }); // Check OTP and expiration
+    const user = await User.findOne({ email, otp, otpExpires: { $gt: Date.now() } });
 
     if (!user) return res.status(400).json({ msg: 'Invalid or expired OTP' });
 
-    // Clear OTP after successful verification
     await User.updateOne({ email }, { otp: null, otpExpires: null });
     return res.status(200).json({ msg: 'OTP verified' });
 }
 
-
-
 // Create new password
 async function createNewPassword(req, res) {
     const { newPassword } = req.body;
-    const email = req.session.email; // Store the email in session or pass it from the frontend
+    const email = req.session.email;
 
     if (!email) return res.status(400).json({ msg: 'No email found' });
 
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
     await User.updateOne({ email }, { password: hashedPassword, otp: null, otpExpires: null });
 
-    // clearing the temporary session 
     req.session.destroy(err => {
         if (err) {
             return res.status(500).send('Failed to logout');
         }
-        res.clearCookie('sessionId');
+        res.clearCookie('token');
         return res.status(200).json({ msg: 'Password updated successfully' });
     });
 }
-
 
 module.exports = { verifyEmail, initiateSignup, loginUser, logoutUser, forgotPassword, verifyOtp, createNewPassword };
