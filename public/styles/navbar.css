@@ -19,6 +19,10 @@ header {
     text-decoration: none;
 }
 
+#logo:hover{
+    cursor: pointer;
+}
+
 .nav-items-container {
     list-style: none;
     display: flex;

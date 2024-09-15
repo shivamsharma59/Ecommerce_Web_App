@@ -1,0 +1,119 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-size: 62.5%;
+    font-family: "Montserrat", "Open Sans", sans-serif, Arial, Helvetica;
+}
+
+:root.light-theme,
+[data-theme="light"] {
+    --primary-color: #2843db;
+    --secondary-color: #8b9af4;
+    --accent-color: #4964f8;
+    --text-color: #04050b;
+    --background-color: #eff1fb;
+}
+
+:root.dark-theme,
+[data-theme="dark"] {
+    --primary-color: #243fd6;
+    --secondary-color: #0b1b75;
+    --accent-color: #0721b6;
+    --text-color: #f4f5fb;
+    --background-color: #040610;
+}
+
+/* Body styling */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Main section styling */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Error box styling */
+#error-box {
+    background-color: var(--background-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.error-status-code {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+}
+
+/* Link styling */
+#error-box a {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+#error-box a:hover {
+    color: var(--accent-color);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .error-status-code {
+        font-size: 3rem;
+    }
+
+    .error-message {
+        font-size: 1.6rem;
+    }
+
+    #error-box {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-status-code {
+        font-size: 2.5rem;
+    }
+
+    .error-message {
+        font-size: 1.4rem;
+    }
+
+    #error-box {
+        padding: 1rem;
+    }
+}
