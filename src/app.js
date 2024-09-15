@@ -34,8 +34,6 @@ app.set('views', path.join(__dirname, './views'));
 
 // Routes 
 const indexRoutes = require('./routes/indexRoutes');
-const apiRoutes = require('./routes/apiRoutes');
-
 app.use('/',indexRoutes);
 
 module.exports = app;

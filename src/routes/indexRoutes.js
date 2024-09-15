@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product.js');
-const homeController = require('../controllers/homeController.js');
 const authController = require('../controllers/authControllers.js');
 
 router.get('/', async (req, res) => {
