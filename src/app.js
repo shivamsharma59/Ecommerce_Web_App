@@ -37,6 +37,5 @@ const indexRoutes = require('./routes/indexRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 
 app.use('/',indexRoutes);
-app.use('/api',apiRoutes);
 
 module.exports = app;
