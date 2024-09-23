@@ -1,5 +1,5 @@
-const Product = require('../models/product');
-const Cart = require('../models/cart'); // Import the Cart model
+const Product = require('../models/product.js');
+const Cart = require('../models/cart.js'); // Import the Cart model
 const path = require('path');
 const fs = require('fs');
 

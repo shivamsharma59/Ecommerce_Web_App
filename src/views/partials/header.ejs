@@ -38,7 +38,7 @@
                 <% if(session.isLoggedIn) { %>
                     <li class="nav-items profile">
                         <i class="ri-user-fill" id="profile-icon"></i>
-                        <a href="/auth/admin" class="nav-links">
+                        <a href="/auth/dashboard" class="nav-links">
                             <%= session.username %>
                         </a>
                     </li>
@@ -46,11 +46,11 @@
                         <a href="/logout" id="logout-btn" class="nav-links"><i class="ri-logout-circle-r-line"
                                 id="logout-icon"></i></a>
                     </li>
-                <% } else { %>
-                    <li class="nav-items profile">
-                        <a href="signup" id="signup-login-btn">Login/SignUp</a>
-                    </li>
-                <% } %>
+                    <% } else { %>
+                        <li class="nav-items profile">
+                            <a href="signup" id="signup-login-btn">Login/SignUp</a>
+                        </li>
+                        <% } %>
             </ul>
         </nav>
     </header>

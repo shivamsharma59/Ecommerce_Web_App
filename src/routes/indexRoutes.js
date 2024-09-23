@@ -4,7 +4,7 @@ const Product = require('../models/product.js');
 const authController = require('../controllers/authControllers.js');
 
 router.get('/', async (req, res) => {
-    try {
+    try {// upper limit
         const limit = 5; // Number of products per page
         const products = await Product.find().limit(limit);
         const totalProducts = await Product.countDocuments();

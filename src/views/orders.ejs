@@ -1,0 +1,38 @@
+<%- include('./partials/header') %>
+
+<head>
+    <link rel="stylesheet" href="/styles/orders.css">
+</head>
+
+<main>
+    <section id="orders-container">
+        <ul id="orders-list">
+            <% if (orders.length > 0) { %>
+                <% orders.forEach(order => { %>
+                    <li class="order">
+                        <img src="<%= order.products[0].productId.imageUrl %>" alt="product-img">
+                        <div class="order-details">
+                            <h2 class="order-id">Order ID: <%= order._id %></h2>
+                            <h2 class="total-price">Total: $<%= order.totalAmount %></h2>
+                            <ul class="products">
+                                <% order.products.forEach(product => { %>
+                                    <li class="product">
+                                        <img src="<%= product.productId.imageUrl %>" alt="product-img">
+                                        <div>
+                                            <h3 class="product-name"><%= product.productId.productName %></h3>
+                                            <h4 class="description"><%= product.productId.description %></h4>
+                                            <h4 class="quantity">Quantity: <%= product.quantity %></h4>
+                                            <h4 class="buy-price">Price: $<%= product.buyPrice %></h4>
+                                        </div>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </li>
+                <% }); %>
+            <% } else { %>
+                <li>No orders found.</li>
+            <% } %>
+        </ul>
+    </section>
+</main>

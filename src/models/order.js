@@ -1,8 +1,7 @@
-// models/orders.js
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -17,29 +16,33 @@ const orderSchema = new mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true
-            }
-        }
+            },
+            buyPrice: {
+                type: Number,
+                default: 0
+            },
+            address: {
+                street: String,
+                city: String,
+                state: String,
+                zipCode: String,
+                country: String
+            },
+            contactDetails: {
+                phone: String,
+                email: String
+            },
+            status: {
+                type: String,
+                enum: ['Pending', 'Completed', 'Rejected'],
+                default: 'Pending'
+            },
+        },
     ],
     totalAmount: {
         type: Number,
         required: true
     },
-    address: {
-        street: String,
-        city: String,
-        state: String,
-        zipCode: String,
-        country: String
-    },
-    contactDetails: {
-        phone: String,
-        email: String
-    },
-    status: {
-        type: String,
-        enum: ['Pending', 'Completed', 'Rejected'],
-        default: 'Pending'
-    }
-}, { timestamps: true });
+});
 
 module.exports = mongoose.model('Order', orderSchema);

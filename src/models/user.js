@@ -14,13 +14,12 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         unique: true,
         required: 'Email address is required',
-        validate: [validateEmail, 'Please fill a valid email address'],
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+        validate: [validateEmail, 'Please fill a valid email address']
     },
     isVerified: { type: Boolean, default: false },
     emailToken: { type: String },
-    otp: { type: String }, // Field for storing OTP
-    otpExpires: { type: Date }, // Field for storing OTP expiration
+    otp: { type: String }, // for storing OTP
+    otpExpires: { type: Date }, // for storing OTP expiration
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cart'

@@ -31,7 +31,6 @@ async function renderCheckoutPage(req, res) {
     }
 }
 
-
 async function process(req, res) {
     try {
         const { street, city, state, zipCode, country, phone, email } = req.body;
@@ -47,16 +46,25 @@ async function process(req, res) {
             return res.status(400).json({ success: false, message: 'Cart is empty' });
         }
 
-        // Calculate total amount
+        // Calculate total amount and prepare products for the order
         let totalAmount = 0;
+        const productsForOrder = [];
+
         for (const item of cart.products) {
             const product = await Product.findById(item.productId);
             totalAmount += product.price * item.quantity;
 
-            // Update product stock
+            // Check product stock
             if (product.stock >= item.quantity) {
-                product.stock -= item.quantity;
+                product.stock -= item.quantity; // Decrease stock
                 await product.save();
+
+                // Push item to products array for the order
+                productsForOrder.push({
+                    productId: product._id,
+                    quantity: item.quantity,
+                    buyPrice: product.price // Set buyPrice here
+                });
             } else {
                 return res.status(400).json({ success: false, message: `Not enough stock for ${product.productName}` });
             }
@@ -64,12 +72,12 @@ async function process(req, res) {
 
         // Create the order
         const newOrder = new Order({
-            user: userId,
-            products: cart.products,
+            userId: userId,
+            products: productsForOrder,
             totalAmount,
             address: { street, city, state, zipCode, country },
             contactDetails: { phone, email },
-            status: 'Completed' // Marking as completed for now, you can add payment logic here
+            status: 'Completed' // Assuming order is completed for now
         });
 
         await newOrder.save();
@@ -77,11 +85,12 @@ async function process(req, res) {
         // Clear the user's cart
         await Cart.deleteOne({ userId });
 
-        res.status(200).json({ success: true, message: 'Order placed successfully!' });
+        return res.status(200).json({ success: true, message: 'Order placed successfully!' });
     } catch (error) {
         console.error('Error placing order:', error);
-        res.status(500).json({ success: false, message: 'Failed to place order' });
+        return res.status(500).json({ success: false, message: 'Failed to place order' });
     }
 }
+
 
 module.exports = { renderCheckoutPage, process }

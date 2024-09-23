@@ -1,5 +1,5 @@
-const Cart = require('../models/cart');
-const Product = require('../models/product');
+const Cart = require('../models/cart.js');
+const Product = require('../models/product.js');
 
 async function addToCart(req, res) {
     try {
@@ -26,7 +26,7 @@ async function addToCart(req, res) {
         const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
         if (productIndex > -1) {
             // Update the quantity if the product is already in the cart
-            const newQuantity = cart.products[productIndex].quantity + parseInt(quantity, 10);
+            const newQuantity = cart.products[productIndex].quantity + parseInt(quantity, 10); // using base 10 for converting
             if (newQuantity > product.stock) {
                 return res.status(400).json({ error: 'Quantity exceeds stock availability' });
             }
@@ -115,7 +115,7 @@ async function getCart(req, res) {
             totalAmount += item.productId.price * item.quantity; // Assuming productId contains price
         });
 
-        res.render('cart', { session: req.session, cart, totalAmount });
+        return res.render('cart', { session: req.session, cart, totalAmount });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -136,10 +136,10 @@ async function checkStock(req, res) {
             return res.status(400).json({ success: false, message: 'Quantity exceeds stock availability' });
         }
 
-        res.json({ success: true });
+        return res.json({ success: true });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }
 

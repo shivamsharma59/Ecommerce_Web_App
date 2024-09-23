@@ -1,8 +1,8 @@
-const User = require('../models/user');
-const VerificationToken = require('../models/verificationToken');
+const User = require('../models/user.js');
+const VerificationToken = require('../models/verificationToken.js');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
-const sendMail = require('../services/sendMail');
+const sendMail = require('../services/sendMail.js');
 const jwt = require('jsonwebtoken');
 
 // Initiate signup by generating and sending a verification token
@@ -103,6 +103,7 @@ async function loginUser(req, res) {
         res.cookie('token', token, { httpOnly: true });
 
         req.session.username = user.username;
+        req.session.email = user.email;
         req.session.isLoggedIn = true;
         req.session.isAdmin = user.isAdmin;
 
