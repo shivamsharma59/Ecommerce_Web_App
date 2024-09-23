@@ -3,6 +3,7 @@ const router = express.Router();
 const Order = require('../models/order.js');
 
 router.get('/', (req, res) => {
+    console.log(req.session);
     return res.render('dashboard', { session: req.session, user: req.user });
 });
 

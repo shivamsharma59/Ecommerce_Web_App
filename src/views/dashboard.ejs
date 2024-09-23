@@ -21,5 +21,8 @@
         <div class="options">
             <a href="/auth/dashboard/orders">Order</a>
             <a href="/auth/dashboard/wishlist">Wishlist</a>
+            <% if(session.isAdmin) { %>
+            <a href="/auth/admin">Store</a>
+            <% } %>
         </div>
     </main>
