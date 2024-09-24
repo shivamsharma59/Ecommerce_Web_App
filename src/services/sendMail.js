@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send different types of emails
-async function sendMail(email, tokenOrOtp, type) {
+async function sendMail(email, tokenOrOtp, type, host) {
     let subject, htmlContent;
 
     if (type === 'verification') {
@@ -18,7 +18,7 @@ async function sendMail(email, tokenOrOtp, type) {
         htmlContent = `
             <p>Hello,</p>
             <p>Please verify your email address by clicking the link below:</p>
-            <a href="http://localhost:${process.env.PORT}/verifyEmail?emailToken=${tokenOrOtp}">Verify Email</a>
+            <a href="http:${host}//:${process.env.PORT}/verifyEmail?emailToken=${tokenOrOtp}">Verify Email</a>
             <p>Thank you!</p>
         `;
     } else if (type === 'otp') {

@@ -15,7 +15,8 @@ async function initiateSignup(req, res) {
     if (user) return res.status(400).json({ msg: 'User with this username or email already exists!' });
 
     // Save verification token to a temporary collection
-    await sendMail(email, emailToken, 'verification');
+    const host = req.hostUrl = `${req.protocol}://${req.get('host')}`;
+    await sendMail(email, emailToken, 'verification', host);
 
     try {
         await VerificationToken.create({
@@ -131,7 +132,7 @@ async function logoutUser(req, res) {
 async function forgotPassword(req, res) {
     const { email } = req.body;
     req.session.email = email; // Store email in session
-
+    const host = req.hostUrl = `${req.protocol}://${req.get('host')}`;
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ msg: 'User not found' });
 
@@ -139,7 +140,7 @@ async function forgotPassword(req, res) {
     const otpExpires = Date.now() + 15 * 60 * 1000; // OTP valid for 15 minutes
 
     await User.updateOne({ email }, { otp, otpExpires });
-    await sendMail(email, otp, 'otp'); // Send OTP to user's email
+    await sendMail(email, otp, 'otp', host); // Send OTP to user's email
 
     return res.status(200).json({ msg: 'OTP sent to your email' });
 }
