@@ -96,3 +96,10 @@ h6 {
     display: flex;
     gap: 2rem;
 }
+
+#loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #666;
+}

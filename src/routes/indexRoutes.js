@@ -3,12 +3,15 @@ const router = express.Router();
 const Product = require('../models/product.js');
 const authController = require('../controllers/authControllers.js');
 
+// Fixed number of products per page
+const productsPerPage = 5;
+
 router.get('/', async (req, res) => {
-    try {// upper limit
-        const limit = 5; // Number of products per page
-        const products = await Product.find().limit(limit);
+    try {
+        // Fetch the first set of products
+        const products = await Product.find().limit(productsPerPage);
         const totalProducts = await Product.countDocuments();
-        const hasMore = totalProducts > limit;
+        const hasMore = totalProducts > productsPerPage;
 
         // Render the home page with the first set of products
         res.render('home', {
@@ -23,13 +26,12 @@ router.get('/', async (req, res) => {
 
 router.get('/load-products', async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 5;
-        const skip = (page - 1) * limit;
+        const page = parseInt(req.query.page) || 1; // Use the page number from the query
+        const skip = (page - 1) * productsPerPage;
 
-        const products = await Product.find().skip(skip).limit(limit);
+        const products = await Product.find().skip(skip).limit(productsPerPage);
         const totalProducts = await Product.countDocuments();
-        const hasMore = totalProducts > skip + limit;
+        const hasMore = totalProducts > skip + productsPerPage;
 
         res.json({ products, hasMore });
     } catch (error) {
@@ -37,6 +39,7 @@ router.get('/load-products', async (req, res) => {
     }
 });
 
+// Other routes remain unchanged
 
 router.get('/signup', (req, res) => { return res.render('signup'); });
 
