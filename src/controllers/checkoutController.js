@@ -17,7 +17,7 @@ async function renderCheckoutPage(req, res) {
 
         let totalAmount = 0;
         for (const item of cart.products) {
-            totalAmount += item.productPrice * item.quantity;
+            totalAmount += Number(item.productId.price) * Number(item.quantity);
         }
 
         res.render('checkout', {
@@ -52,7 +52,7 @@ async function process(req, res) {
 
         for (const item of cart.products) {
             const product = await Product.findById(item.productId);
-            totalAmount += product.price * item.quantity;
+            totalAmount += Number(product.price) * Number(item.quantity);
 
             // Check product stock
             if (product.stock >= item.quantity) {
